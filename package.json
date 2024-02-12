@@ -10,7 +10,10 @@
   "license": "ISC",
   "dependencies": {
     "hardhat": "^2.19.5",
-    "tsx": "^4.7.0",
     "typescript": "^5.3.2"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "ts-node": "^10.9.2"
   }
 }
