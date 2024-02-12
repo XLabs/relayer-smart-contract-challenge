@@ -1,0 +1,16 @@
+{
+  "name": "@xlabs-xyz/relayer-smart-contract-challenge",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "hardhat build"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "hardhat": "^2.19.5",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.2"
+  }
+}
