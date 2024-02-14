@@ -2,8 +2,8 @@
   "compilerOptions": {
     "composite": true,
     "target": "ESNext",
-    "module": "NodeNext",
-    "moduleResolution": "NodeNext",
+    "module": "node16",
+    "moduleResolution": "node16",
     "declaration": true,
     "outDir": "build",
     "esModuleInterop": true,
@@ -12,5 +12,6 @@
     "noImplicitAny": true
   },
   "files": ["hardhat.config.ts"],
+  "include": ["test"],
   "references": []
 }

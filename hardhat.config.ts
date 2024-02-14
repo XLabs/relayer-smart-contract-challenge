@@ -1,4 +1,5 @@
 import type { HardhatUserConfig } from "hardhat/types";
+import "@nomicfoundation/hardhat-toolbox";
 
 const config: HardhatUserConfig = {
     networks: {

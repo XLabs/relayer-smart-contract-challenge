@@ -11,6 +11,7 @@ build/
 build-test/
 cache/
 artifacts/
+typechain-types/
 
 # Ignore log files
 *.log

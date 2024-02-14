@@ -25,6 +25,10 @@ contract RelayerGateway {
 
     WormholeRelayerMock wormholeRelayer;
 
+    constructor(WormholeRelayerMock relayerMock) {
+        wormholeRelayer = relayerMock;
+    }
+
     function deliverGR(bytes memory message) payable public {
         SlimVm memory parsedMessage = parseMessage(message);
         bytes memory vaa = buildVaa(parsedMessage);
