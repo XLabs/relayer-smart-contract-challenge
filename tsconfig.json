@@ -12,6 +12,6 @@
     "noImplicitAny": true
   },
   "files": ["hardhat.config.ts"],
-  "include": ["test"],
+  "include": ["test", "typechain-types", "scripts"],
   "references": []
 }
