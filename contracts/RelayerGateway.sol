@@ -43,14 +43,14 @@ contract RelayerGateway {
         parsedMessage.signatures = new bytes[](QUORUM_SIGNATURES);
         for (uint256 i = 0; i < QUORUM_SIGNATURES; ++i) {
             bytes memory signature;
-            (signature, offset) = message.sliceUnchecked(offset, offset + signatureLength);
+            (signature, offset) = message.sliceUnchecked(offset, signatureLength);
             parsedMessage.signatures[i] = signature;
         }
         (parsedMessage.timestamp, offset) = message.asUint32Unchecked(offset);
         (parsedMessage.emitterChainId, offset) = message.asUint16Unchecked(offset);
         (parsedMessage.sequence, offset) = message.asUint64Unchecked(offset);
         (parsedMessage.consistencyLevel, offset) = message.asUint8Unchecked(offset);
-        (parsedMessage.payload, offset) = message.sliceUnchecked(offset, message.length);
+        (parsedMessage.payload, offset) = message.sliceUnchecked(offset, message.length - offset);
 
         return parsedMessage;
     }
