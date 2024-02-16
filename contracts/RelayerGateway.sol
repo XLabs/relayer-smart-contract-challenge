@@ -50,7 +50,10 @@ contract RelayerGateway {
         (parsedMessage.emitterChainId, offset) = message.asUint16Unchecked(offset);
         (parsedMessage.sequence, offset) = message.asUint64Unchecked(offset);
         (parsedMessage.consistencyLevel, offset) = message.asUint8Unchecked(offset);
-        (parsedMessage.payload, offset) = message.sliceUnchecked(offset, message.length - offset);
+
+        uint16 payloadSize;
+        (payloadSize, offset) = message.asUint16Unchecked(offset);
+        (parsedMessage.payload, offset) = message.sliceUnchecked(offset, payloadSize);
 
         return parsedMessage;
     }

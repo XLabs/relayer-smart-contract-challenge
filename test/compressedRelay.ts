@@ -27,25 +27,8 @@ describe("RelayerGateway", () => {
 
   describe("Relay GR message", () => {
     it("relay message should succeed", async () => {
-      const mockSignature = new Array(66);
-      mockSignature.fill(1, 0, mockSignature.length);
-      const mockSignatures = [];
-      for (let i = 0; i < 12; ++i) {
-        mockSignatures.push(mockSignature);
-      }
-      const signatures = Uint8Array.from(mockSignature.concat(...mockSignatures));
-      const timestamp = 10_001;
-      const emitterChainId = 6;
-      const sequence = 6000n;
-      const consistencyLevel = 1;
-      const payload = Uint8Array.from([2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]);
+      const {message, timestamp, sequence} = buildMockMessage(13);
 
-      const message = hre.ethers.solidityPacked(
-        ["bytes", "uint32", "uint16", "uint64", "uint8", "bytes"],
-        [signatures, timestamp, emitterChainId, sequence, consistencyLevel, payload]
-      );
-
-      console.log(`Compressed message: ${message}`)
       const tx = await relayerGateway.deliverGR(message);
       const receipt = await tx.wait();
 
@@ -61,26 +44,43 @@ describe("RelayerGateway", () => {
 
 
     it("malformed relay message should fail", async () => {
-      const mockSignature = new Array(66);
-      mockSignature.fill(1, 0, mockSignature.length);
-      const mockSignatures = [];
-      for (let i = 0; i < 15; ++i) {
-        mockSignatures.push(mockSignature);
-      }
-      const signatures = Uint8Array.from(mockSignature.concat(...mockSignatures));
-      const timestamp = 10_000;
-      const emitterChainId = 6;
-      const sequence = 6000;
-      const consistencyLevel = 1;
-      const payload = Uint8Array.from([2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]);
+      const {message} = buildMockMessage(16);
 
-      const message = hre.ethers.solidityPacked(
-        ["bytes", "uint32", "uint16", "uint64", "uint8", "bytes"],
-        [signatures, timestamp, emitterChainId, sequence, consistencyLevel, payload]
-      );
+      await expect(relayerGateway.deliverGR(message)).to.be.reverted;
+    });
+
+
+    it("relay message without sufficient signatures should fail", async () => {
+      const {message} = buildMockMessage(6);
 
       await expect(relayerGateway.deliverGR(message)).to.be.reverted;
     });
   });
 
 });
+
+function buildMockMessage(amountOfSignatures: number) {
+  const mockSignature = new Array(66);
+  mockSignature.fill(1, 0, mockSignature.length);
+  const mockSignatures = [];
+  for (let i = 0; i < amountOfSignatures - 1; ++i) {
+    mockSignatures.push(mockSignature);
+  }
+  const signatures = Uint8Array.from(mockSignature.concat(...mockSignatures));
+  const timestamp = 10_000;
+  const emitterChainId = 6;
+  const sequence = 6000;
+  const consistencyLevel = 1;
+  const payload = Uint8Array.from([2, 0, 2, 0, 2, 0, 2, 0, 2, 0, 2, 0]);
+
+  const message = hre.ethers.solidityPacked(
+    ["bytes", "uint32", "uint16", "uint64", "uint8", "uint16", "bytes"],
+    [signatures, timestamp, emitterChainId, sequence, consistencyLevel, payload.length, payload]
+  );
+
+  return {
+    message,
+    timestamp,
+    sequence,
+  }
+}
